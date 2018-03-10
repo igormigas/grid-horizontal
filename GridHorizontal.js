@@ -71,23 +71,6 @@ let GridH = function (container, settings = {}) {
 	// FUNCTIONS
 	//
 
-	function pushToHTML(jqueryItems, jqueryImages, images) {
-
-		for(let i=0;i<jqueryImages.length;++i) {
-			if(jqueryImages[i].src != images[i].src) continue;
-
-			$(jqueryItems[i]).css('position', 'absolute')
-				.width(images[i].width)
-				.height(images[i].height)
-				//.offset({top: images[i].offsetTop, left: images[i].offsetLeft});
-				.css('top', images[i].offsetTop)
-				.css('left', images[i].offsetLeft)
-
-			$(jqueryImages[i]).width(images[i].width)
-				.height(images[i].height);
-		} 
-	}
-
 	function minimizeImagesInfo(images)	{
 
 		let array = [];
@@ -101,11 +84,6 @@ let GridH = function (container, settings = {}) {
 		}
 
 		return array;
-	}
-
-	function increaseCurrentOffsetTop(value) {
-
-		currentOffsetTop += value;
 	}
 
 	function createRows(array) {
@@ -141,6 +119,23 @@ let GridH = function (container, settings = {}) {
 		finalContainerHeight = currentOffsetTop;
 
 		return rows;
+	}
+
+	function pushToHTML(jqueryItems, jqueryImages, images) {
+
+		for(let i=0;i<jqueryImages.length;++i) {
+			if(jqueryImages[i].src != images[i].src) continue;
+
+			$(jqueryItems[i]).css('position', 'absolute')
+				.width(images[i].width)
+				.height(images[i].height)
+				//.offset({top: images[i].offsetTop, left: images[i].offsetLeft});
+				.css('top', images[i].offsetTop)
+				.css('left', images[i].offsetLeft)
+
+			$(jqueryImages[i]).width(images[i].width)
+				.height(images[i].height);
+		} 
 	}
 
 	function sliceHeightCalc(array) {
@@ -182,6 +177,11 @@ let GridH = function (container, settings = {}) {
 		item.height = getHeightByWidth(item, width);
 		item.offsetTop = offset;
 		item.offsetLeft = 0;
+	}
+
+	function increaseCurrentOffsetTop(value) {
+
+		currentOffsetTop += value;
 	}
 
 	function getWidthByHeight(object, dimension) {
