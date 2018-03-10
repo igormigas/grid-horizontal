@@ -1,0 +1,11 @@
+CHANGELOG
+
+-------------------------
+v0.9.0
+- creates horizontal layout based on container dynamic width and maximal possible row height
+- creates gutters
+- displays gallery vertically if container width is smaller than defined minimal value
+-------------------------
+v0.9.1
+- bugfix: unexpexted massive bottom offset does not show anymore
+- code optimization
