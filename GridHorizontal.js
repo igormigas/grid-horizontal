@@ -49,21 +49,30 @@ let GridH = function (container, settings = {}) {
 	let currentOffsetLeft = 0;
 	let finalContainerHeight = 0;
 
+	// Start
+
+	if(['absolute', 'fixed', 'relative'].includes(container.css('position')) === false ) {
+		container.css('position', 'relative');
+	}
+
 	let imagesModified = minimizeImagesInfo($images);
 	let rows = createRows(imagesModified);
 	$(container).css('height', finalContainerHeight);
 	
 	pushToHTML($items, $images, imagesModified);
 
-	// destroy currents
+	// Destroy currents
 	currentOffsetTop = 0;
 	currentOffsetLeft = 0;
+
+	// Stop
 
 	//
 	// FUNCTIONS
 	//
 
 	function pushToHTML(jqueryItems, jqueryImages, images) {
+
 		for(let i=0;i<jqueryImages.length;++i) {
 			if(jqueryImages[i].src != images[i].src) continue;
 
@@ -79,7 +88,8 @@ let GridH = function (container, settings = {}) {
 		} 
 	}
 
-	function minimizeImagesInfo(images) {
+	function minimizeImagesInfo(images)	{
+
 		let array = [];
 		for(let i=0;i<images.length;++i) {
 			array[i] = {
@@ -89,55 +99,43 @@ let GridH = function (container, settings = {}) {
 				ratio: images[i].naturalWidth/images[i].naturalHeight,
 			};
 		}
+
 		return array;
 	}
 
-	function createRows(array) {		
+	function increaseCurrentOffsetTop(value) {
+
+		currentOffsetTop += value;
+	}
+
+	function createRows(array) {
+
 		let rows = [];
 		let currentRowHeight = 0;
 
 		for(let i = 1, countItems = array.length; i <= countItems; i++) {			
+			
 			subArray = array.slice(0,i);
 			
 			if(containerWidth < minContainerWidth) {
-
 				pushDimensionsByWidth(subArray, containerWidth, currentOffsetTop);
-				currentRowHeight = getHeightByWidth(subArray[0], containerWidth);
-				
-				currentOffsetTop += currentRowHeight + gutter; 
-			
-				// Zresetuj dane wejściowe dla pętli
-				array = array.slice(i);
-				i = 0;
-				countItems=array.length;
-
+				currentRowHeight = getHeightByWidth(subArray[0], containerWidth);	
 			} else if((currentRowHeight=sliceHeightCalc(subArray)) < maxRowHeight) {
-
-				// Przypisz obrazkom ich wymiary wtórne
-				pushDimensionsByHeight(subArray, currentRowHeight, currentOffsetTop);
-			
-				// Dodaj odnalezioną część do tablicy z rzędami
-				rows.push({
-					height: currentRowHeight,
-					topOffset: currentOffsetTop,
-					images: subArray,
-				});
-			
-				currentOffsetTop += currentRowHeight + gutter; 
-			
-				// Zresetuj dane wejściowe dla pętli
-				array = array.slice(i);
-				i = 0;
-				countItems=array.length;
+				pushDimensionsByHeight(subArray, currentRowHeight, currentOffsetTop);				
+			} else {
+				continue;
 			}
+
+			increaseCurrentOffsetTop(currentRowHeight + gutter);
+
+			array = array.slice(i);			
+			countItems=array.length;
+			i = 0;
 		}
 
 		if(array.length > 0) {
 			pushDimensionsByHeight(array, maxRowHeight, currentOffsetTop);
-
-			// Dodaj odnalezioną część do tablicy z rzędami
-
-			currentOffsetTop += currentRowHeight + gutter;
+			increaseCurrentOffsetTop(maxRowHeight);
 		}
 
 		finalContainerHeight = currentOffsetTop;
@@ -145,8 +143,8 @@ let GridH = function (container, settings = {}) {
 		return rows;
 	}
 
-	function sliceHeightCalc(array)
-	{
+	function sliceHeightCalc(array) {
+
 		let calcHeight;
 		let iGutter = array.length-1;
 		let workWidth = containerWidth - iGutter*gutter;
@@ -161,6 +159,7 @@ let GridH = function (container, settings = {}) {
 	}
 
 	function pushDimensionsByHeight(array, height, offset) {
+
 		let currentOffsetLeft = 0;
 
 		for(let i=0, len = array.length; i<len; i++) {
@@ -176,7 +175,7 @@ let GridH = function (container, settings = {}) {
 	}
 
 	function pushDimensionsByWidth(array, width, offset) {
-		
+
 		let item = array[0];
 
 		item.width = width;
