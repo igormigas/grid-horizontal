@@ -34,10 +34,10 @@ JS + jQuery:
 ```javascript
 $('div.container').GridHorizontal({
 	item: '.item',
-  imageClass: '.cover',
+	imageClass: '.cover',
 	minWidth: 400,
 	maxRowHeight: 350,
 	gutter: 15,
-  hideOverload: false,
+	hideOverload: false,
 })
 ```
